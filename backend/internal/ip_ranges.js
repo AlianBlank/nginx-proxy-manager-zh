@@ -5,7 +5,7 @@ const error         = require('../lib/error');
 const utils         = require('../lib/utils');
 const internalNginx = require('./nginx');
 
-const CLOUDFRONT_URL   = 'https://ip-ranges.amazonaws.com/ip-ranges.json';
+const CLOUDFRONT_URL   = './backend/config/ip-ranges.json';
 const CLOUDFARE_V4_URL = 'https://www.cloudflare.com/ips-v4';
 const CLOUDFARE_V6_URL = 'https://www.cloudflare.com/ips-v6';
 
@@ -14,7 +14,7 @@ const regIpV6 = /^(([\da-fA-F]+)?:)+\/\d+/;
 
 const internalIpRanges = {
 
-	interval_timeout:    1000 * 60 * 60 * 6, // 6 hours
+	interval_timeout:    1000 * 60, // 6 hours
 	interval:            null,
 	interval_processing: false,
 	iteration_count:     0,
@@ -27,7 +27,22 @@ const internalIpRanges = {
 	fetchUrl: (url) => {
 		return new Promise((resolve, reject) => {
 			logger.info('Fetching ' + url);
-			return https.get(url, (res) => {
+
+			const absolutePath = path.resolve(__dirname, url);
+
+			fs.readFile(absolutePath, 'utf8', (err, data) => {
+			  if (err) {
+				return reject(err); // 如果读取出错，返回错误
+			  }
+			  try {
+				// 解析 JSON 数据
+				resolve(data); // 返回解析后的数据
+			  } catch (parseErr) {
+				reject(parseErr); // 如果解析出错，返回错误
+			  }
+			});
+
+/* 			return https.get(url, (res) => {
 				res.setEncoding('utf8');
 				let raw_data = '';
 				res.on('data', (chunk) => {
@@ -39,7 +54,7 @@ const internalIpRanges = {
 				});
 			}).on('error', (err) => {
 				reject(err);
-			});
+			}); */
 		});
 	},
 
