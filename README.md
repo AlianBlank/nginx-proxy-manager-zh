@@ -28,7 +28,7 @@
 version: '3'
 services:
   app:
-    image: 'chishin/nginx-proxy-manager-zh:release'
+    image: 'alianhome/nginx-proxy-manager-zh:release'
     restart: always
     ports:
       - '80:80'
@@ -84,7 +84,7 @@ docker-compose up -d
 
 ### 2. 替换中文镜像
 
-当你使用官方示例的`docker-compose`时需要注意，将image镜像`jc21/nginx-proxy-manager`替换为`chishin/nginx-proxy-manager-zh`即可实现中文部署。
+当你使用官方示例的`docker-compose`时需要注意，将image镜像`jc21/nginx-proxy-manager`替换为`alianhome/nginx-proxy-manager-zh`即可实现中文部署。
 
 ### 3. 关于中文镜像
 
